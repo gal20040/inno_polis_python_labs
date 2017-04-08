@@ -1,0 +1,9 @@
+ArtemGrodetskiy
+1
+True,q0->q1->q0->q1->q2
+False,q0->q0->q1->q0
+2
+False,q0->q1->q0->q0->q0->q1->q2->q2
+True,q0->q1->q2->q3->q3->q3->q3->q3->q3->q3
+False,q0
+False,q0->q0->q0->q0->q0->q0
