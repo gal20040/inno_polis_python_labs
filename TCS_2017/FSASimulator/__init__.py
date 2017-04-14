@@ -1,6 +1,6 @@
-from FSAsimulator.Automaton import Automaton
-from FSAsimulator.OutputWriter import OutputWriter
-from FSAsimulator.InputReader import InputReader
+from TCS_2017.FSASimulator.Automaton import Automaton
+from TCS_2017.FSASimulator.InputReader import InputReader
+from TCS_2017.FSASimulator.OutputWriter import OutputWriter
 
 input_reader = InputReader()
 output_writer = OutputWriter()
