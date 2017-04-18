@@ -36,3 +36,4 @@ class InputReader(object):
     def close_input_file(self):
         self.input_file.close()
         self.input_file = None
+        return None

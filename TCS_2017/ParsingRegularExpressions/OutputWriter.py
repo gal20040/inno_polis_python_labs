@@ -6,6 +6,7 @@ class OutputWriter(object):
     def close_output_file(self):
         self.output_file.close()
         self.output_file = None
+        return None
 
     def write_a_string(self, string):
         self.output_file.write(string)
