@@ -16,14 +16,14 @@ class TestRegex(unittest.TestCase):
                 [reg_exp, true_string] = llist
             elif len(llist) == 3:
                 [reg_exp, true_string, false_string] = llist
-            ndfsa = reg_exp_parse(reg_exp)
+            automaton = reg_exp_parse(reg_exp)
 
-            result = ndfsa.validate(true_string)
+            result = automaton.validate(true_string)
             if result is False:
                 self.assertEqual(False, True)
 
             if false_string:
-                result = ndfsa.validate(false_string)
+                result = automaton.validate(false_string)
                 if result is not False:
                     self.assertEqual(True, False)
 
