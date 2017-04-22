@@ -125,7 +125,6 @@ class State:
 
 class NDFSA:
     __result = ""
-    __last_added_state = ""
 
     def __init__(self, start, end):
         self.start = start
@@ -137,46 +136,33 @@ class NDFSA:
             state_set.add(state)
             state.ancestors_names = ancestors_names
             for eps in state.epsilon:
-                if state.name == self.__last_added_state:
-                    ancestors_names = ""
+                if state.ancestors_names == "":
+                    ancestors_names = state.name
                 else:
-                    if state.ancestors_names == "":
-                        ancestors_names = state.name
-                    else:
-                        ancestors_names = state.ancestors_names + " " + state.name
+                    ancestors_names = state.ancestors_names + state.name
                 self.add_state(eps, state_set, ancestors_names)
 
     def validate(self, string):
         current_states = set()
+        self.__result = ""
         ancestors_names = ""
-        self.__result = self.start.name
-        self.__last_added_state = self.start.name
         self.add_state(self.start, current_states, ancestors_names)
 
         for symbol in string:
             next_states = set()
             for state in current_states:
                 if symbol in state.transitions.keys():
-                    if self.__last_added_state != state.name:
-                        if self.__result == "":
-                            self.__result += state.ancestors_names
-                        else:
-                            self.__result += " " + state.ancestors_names + " "
-                        self.__result += state.name
                     transition_state = state.transitions[symbol]
-                    self.__result += " " + transition_state.name
-                    self.__last_added_state = transition_state.name
-                    ancestors_names = ""
+                    ancestors_names = state.ancestors_names + state.name
                     self.add_state(transition_state, next_states, ancestors_names)
 
             current_states = next_states
 
         for state in current_states:
             if state.is_end:
-                if state.name not in self.__result:
-                    if state.ancestors_names != "":
-                        self.__result += " " + state.ancestors_names
-                    self.__result += " " + state.name
+                if state.ancestors_names != "":
+                    self.__result = state.ancestors_names
+                self.__result += state.name
                 return self.__result
         return False
 
