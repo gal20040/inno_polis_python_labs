@@ -20,8 +20,6 @@ if __name__ == "__main__":
     input_reader = InputReader()
     output_writer = OutputWriter()
 
-    # cases_number = 1  # int(input_reader.read_one_line())
-    # for i in range(cases_number):
     reg_exp = input_reader.read_one_line()
     automaton = reg_exp_parse(reg_exp)
 
