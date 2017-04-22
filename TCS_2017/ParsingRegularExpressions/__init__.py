@@ -1,6 +1,6 @@
 from InputReader import InputReader
 from OutputWriter import OutputWriter
-from automaton import reg_exp_parse
+import Parser
 
 
 # remove double breakspaces in the string and breakspace(s) in the begining of the string
@@ -17,17 +17,18 @@ def remove_redundant_breakspaces(string_curr):
 
 
 if __name__ == "__main__":
-    input_reader = InputReader()
+    input_file_name = "input.txt"
+    input_reader = InputReader(input_file_name)
     output_writer = OutputWriter()
 
     reg_exp = input_reader.read_one_line()
-    automaton = reg_exp_parse(reg_exp)
+    ndfsa = Parser.reg_exp_parse(reg_exp)
 
     test_cases_list = input_reader.read_test_cases_from_input_file()
 
     for j in range(len(test_cases_list)):
         result_string = ""
-        result = automaton.validate(test_cases_list[j])
+        result = ndfsa.validate(test_cases_list[j])
 
         if not result:  # for cases: result = False
             result = ""
