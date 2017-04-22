@@ -1,3 +1,5 @@
+import NDFSA
+
 LEFT_PARENTHESIS = 'LEFT_PARENTHESIS'
 RIGHT_PARENTHESIS = 'RIGHT_PARENTHESIS'
 STAR_MARK = 'STAR_MARK'
@@ -123,50 +125,6 @@ class State:
         return self.name
 
 
-class NDFSA:
-    __result = ""
-
-    def __init__(self, start, end):
-        self.start = start
-        self.end = end
-        end.is_end = True
-
-    def add_state(self, state, state_set, ancestors_names):
-        if state not in state_set:
-            state_set.add(state)
-            state.ancestors_names = ancestors_names
-            for eps in state.epsilon:
-                if state.ancestors_names == "":
-                    ancestors_names = state.name
-                else:
-                    ancestors_names = state.ancestors_names + state.name
-                self.add_state(eps, state_set, ancestors_names)
-
-    def validate(self, string):
-        current_states = set()
-        self.__result = ""
-        ancestors_names = ""
-        self.add_state(self.start, current_states, ancestors_names)
-
-        for symbol in string:
-            next_states = set()
-            for state in current_states:
-                if symbol in state.transitions.keys():
-                    transition_state = state.transitions[symbol]
-                    ancestors_names = state.ancestors_names + state.name
-                    self.add_state(transition_state, next_states, ancestors_names)
-
-            current_states = next_states
-
-        for state in current_states:
-            if state.is_end:
-                if state.ancestors_names != "":
-                    self.__result = state.ancestors_names
-                self.__result += state.name
-                return self.__result
-        return False
-
-
 class Handler:
     def __init__(self):
         self.state_counter = 0
@@ -186,7 +144,7 @@ class Handler:
         state0 = self.create_state()
         state1 = self.create_state()
         state0.transitions[element.value] = state1
-        ndfsa = NDFSA(state0, state1)
+        ndfsa = NDFSA.init_ndfsa(state0, state1)
         ndfsa_stack.append(ndfsa)
 
     @staticmethod
@@ -206,7 +164,7 @@ class Handler:
 
         else:
             ndfsa1.end.epsilon.append(ndfsa2.start)
-        ndfsa = NDFSA(ndfsa1.start, ndfsa2.end)
+        ndfsa = NDFSA.init_ndfsa(ndfsa1.start, ndfsa2.end)
         ndfsa_stack.append(ndfsa)
 
     def handle_alt(self, element, ndfsa_stack):
@@ -220,7 +178,7 @@ class Handler:
         ndfsa2.end.epsilon.append(state3)
         ndfsa1.end.is_end = False
         ndfsa2.end.is_end = False
-        ndfsa = NDFSA(state0, state3)
+        ndfsa = NDFSA.init_ndfsa(state0, state3)
         ndfsa_stack.append(ndfsa)
 
     def handle_rep(self, element, ndfsa_stack):
@@ -232,7 +190,7 @@ class Handler:
             state0.epsilon.append(state1)
         ndfsa1.end.epsilon.extend([state1, ndfsa1.start])
         ndfsa1.end.is_end = False
-        ndfsa = NDFSA(state0, state1)
+        ndfsa = NDFSA.init_ndfsa(state0, state1)
         ndfsa_stack.append(ndfsa)
 
     @staticmethod
